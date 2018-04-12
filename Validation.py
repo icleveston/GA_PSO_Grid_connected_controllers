@@ -99,7 +99,7 @@ class Validation:
         ax.locator_params(nbins=4)
 
         ax = fig.add_subplot(1, 2, 2, projection='3d')
-        ax.scatter([s.objectives[0] for s in results],
+        ind = ax.scatter([s.objectives[0] for s in results],
                    [s.objectives[1] for s in results],
                    [s.objectives[2] for s in results])
         ax.set_title("NSGA-II - Visão Lateral")
@@ -108,7 +108,7 @@ class Validation:
         ax.set_zlim([0, 1.1])
         ax.view_init(elev=0, azim=140)
         ax.locator_params(nbins=4)
-
+        fig.legend([ind], ["Indivíduo"], ncol=1, loc=8)
         plt.show()
 
         # convergence()
@@ -144,7 +144,7 @@ class Validation:
         ax.locator_params(nbins=4)
 
         ax = fig.add_subplot(1, 2, 2, projection='3d')
-        ax.scatter([s.objectives[0] for s in results],
+        part = ax.scatter([s.objectives[0] for s in results],
                    [s.objectives[1] for s in results],
                    [s.objectives[2] for s in results])
         ax.set_title("OMOPSO - Visão Lateral")
@@ -153,7 +153,7 @@ class Validation:
         ax.set_zlim([0, 1.1])
         ax.view_init(elev=0, azim=140)
         ax.locator_params(nbins=4)
-
+        fig.legend([part], ["Partícula"], ncol=1, loc=8)
         plt.show()
 
     def compareMO(self):
