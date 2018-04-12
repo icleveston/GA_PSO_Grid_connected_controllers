@@ -1,0 +1,9 @@
+Method: GA - other
+N Generation: 6
+N Population: 40
+Population Init: None
+Crossover Rate: 0.8
+Mutation Rate: 0.02
+Limit Max: [10, 10]
+Limit Min: [0, 0]
+Weights: (-1,)

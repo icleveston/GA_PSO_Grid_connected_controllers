@@ -1,0 +1,1 @@
+double control(double tensao, double corrente);
