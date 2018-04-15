@@ -17,10 +17,10 @@ from mpl_toolkits.mplot3d import Axes3D
 def normalizeResults(data, attenuation=False):
 
     # Filter radius < 1
-    a = list(filter(lambda x: x['val'][0] < 10, data))
+    a = list(filter(lambda x: x['val'][0] < 1, data))
 
     if attenuation:
-        a = filter(lambda x: x['val'][1] < 0.1, a)
+        a = filter(lambda x: x['val'][1] < 0.2, a)
 
     v = [[i['val'][0], i['val'][1], i['val'][2]] for i in a]
 
@@ -448,19 +448,21 @@ def plotConversor(solution, eng, c):
 
     t, y1, y2, ref = eng.plot(c, a, nargout=4)
 
-    f, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True)
-    ax1.plot(t, y1, label='Sinal de Controle')
-    ax1.plot(t, ref, label='Sinal de Referência')
-    ax1.grid()
-    ax1.legend()
-    ax2.plot(t, y2, label='Sinal de Controle')
-    ax2.plot(t, ref, label='Sinal de Referência')
-    ax2.grid()
-    ax2.legend()
-    ax1.set_xlabel("Tempo de Simulação (ms)")
-    ax1.set_ylabel("Tensão (V)")
-    ax2.set_xlabel("Tempo de Simulação (ms)")
-    ax2.set_ylabel("Tensão (V)")
-    ax1.set_title("Indutância Mínima")
-    ax2.set_title("Indutância Máxima")
+    f = plt.figure()
+    ax = f.add_subplot(2, 1, 1)
+    ax.plot(t, y1)
+    ax.plot(t, ref)
+    ax.grid()
+    ax.set_xlabel("Tempo de Simulação (ms)")
+    ax.set_ylabel("Tensão (V)")
+    ax.set_title("Indutância Mínima")
+
+    ax = f.add_subplot(2, 1, 2)
+    ax.plot(t, y2)
+    ax.plot(t, ref)
+    ax.grid()
+    ax.set_xlabel("Tempo de Simulação (ms)")
+    ax.set_ylabel("Tensão (V)")
+    ax.set_title("Indutância Máxima")
+    f.legend(['Sinal de Controle', 'Sinal de Referência'], ncol=2, loc=8)
     plt.show()

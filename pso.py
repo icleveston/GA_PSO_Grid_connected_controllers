@@ -77,9 +77,11 @@ class PSO:
 
         stats = tools.Statistics(lambda ind: ind.fitness.values)
         stats.register("min", np.min, axis=0)
+        stats.register("mean", np.mean, axis=0)
+        stats.register("max", np.max, axis=0)
 
         logbook = tools.Logbook()
-        logbook.header = ["gen", "evals"]
+        logbook.header = ['gen', 'evals'] + (stats.fields if stats else [])
 
         best = None
         results = []

@@ -121,6 +121,8 @@ class Ga:
 
         stats = tools.Statistics(key=lambda ind: ind.fitness.values)
         stats.register("min", np.min, axis=0)
+        stats.register("mean", np.mean, axis=0)
+        stats.register("max", np.max, axis=0)
 
         # Save parameters
         file = open(self.path + '/parameters.txt', "w")
@@ -140,15 +142,15 @@ class Ga:
         file.write("Weights: " + str(self.weights) + "\n")
         file.close()
 
-        self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, ngen=nGenerations, halloffame=hof,
+        population, logbook, statsPopulation = self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, stats=stats, ngen=nGenerations, halloffame=hof,
                        saveGeneration=saveGeneration, path=self.path)
 
-        # self._eaMuPlusLambdaModified(pop, self.toolbox, mu=round(self.populationSize), lambda_=10,
+        # population, logbook, statsPopulation = self._eaMuPlusLambdaModified(pop, self.toolbox, mu=round(self.populationSize), lambda_=10,
         #                       cxpb=crossOver,
         #                       mutpb=mutation, nGeneration=nGenerations, method=method, halloffame=hof, stats=stats,
         #                       saveGeneration=saveGeneration, verbose=True, path=self.path)
 
-        return hof
+        return hof, population, logbook, statsPopulation
 
     def _eaMuPlusLambdaModified(self, population, toolbox, mu, lambda_, cxpb, mutpb, nGeneration, path,
                                 method='modified',
@@ -210,8 +212,6 @@ class Ga:
             if saveGen == saveGeneration:
                 statsPopulation.append(np.asarray(copy.deepcopy(population)))
                 saveGen = 0
-                print("Salvando Geracao")
-                print(population)
 
             saveGen = saveGen + 1
 
@@ -237,21 +237,7 @@ class Ga:
                 if counter >= nGeneration:
                     break
 
-        # Select the historic
-        genGen, genMin = logbook.select("gen", "min")
-
-        # Save historic
-        output = open(path + "/historic.pkl", 'wb')
-        pickle.dump(genMin, output)
-        output.close()
-
-        if saveGeneration:
-            # Save generation
-            output = open(path + "/paretoFrontier.pkl", 'wb')
-            pickle.dump(statsPopulation, output)
-            output.close()
-
-        return population, logbook
+        return population, logbook, statsPopulation
 
     def _eaSimple(self, population, toolbox, cxpb, mutpb, ngen, stats=None,
                   halloffame=None, path='', saveGeneration=0, ):
@@ -297,10 +283,11 @@ class Ga:
             # Replace the current population by the offspring
             population[:] = offspring
 
+            print(logbook.stream)
+
             if saveGen == saveGeneration:
                 statsPopulation.append(np.asarray(copy.deepcopy(population)))
                 saveGen = 0
-                print("Salvando Geracao")
 
             saveGen = saveGen + 1
 
@@ -308,10 +295,5 @@ class Ga:
             record = stats.compile(population) if stats else {}
             logbook.record(gen=gen, nevals=len(invalid_ind), **record)
 
-        if saveGeneration:
-            # Save generation
-            output = open(path + "/paretoFrontier.pkl", 'wb')
-            pickle.dump(statsPopulation, output)
-            output.close()
 
-        return population, logbook
+        return population, logbook, statsPopulation

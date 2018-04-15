@@ -1,6 +1,0 @@
-Method: NSGA-II
-N Population: 10
-N Generation: 10
-Crossover Rate: 0.8
-Mutation Rate: 0.2
-Elapsed Time: 00:00:13

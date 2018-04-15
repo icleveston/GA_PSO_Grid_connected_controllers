@@ -2,17 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from Simulation import Simulation
-from Validation import Validation
+from Validation.Validation import Validation
 
 #Create the validation object
 validation = Validation()
 
 #validation.plotFitness3D()
 #validation.plotFitnessContour()
-#validation.validateGA()
+validation.validateGA()
 #validation.validatePSO()
 #validation.validateNSGA2()
-validation.validateMOPSO()
+#validation.validateMOPSO()
 #validation.compaeMO()
 
 #simulation = Simulation()
@@ -24,7 +24,7 @@ validation.validateMOPSO()
 #simulation.getReport(pathNSGA2)
 
 # Execute the MOPSO algorithm
-#pathMOPSO = '' #simulation.executeMOPSO()
+#pathMOPSO = 'Simulation/04-13-2018-00-15-22 - MOPSO' #simulation.executeMOPSO()
 
 # Generate the report
 #simulation.getReport(pathMOPSO)

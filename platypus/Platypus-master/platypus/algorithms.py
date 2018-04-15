@@ -944,6 +944,8 @@ class OMOPSO(ParticleSwarm):
                                                       mutation_perturbation,
                                                       max_iterations,
                                                       self)
+        self.historic = []
+
 
     def step(self):
         if self.nfe == 0:
@@ -960,6 +962,16 @@ class OMOPSO(ParticleSwarm):
     def iterate(self):
         super(OMOPSO, self).iterate()
         self.archive += self.particles
+
+        # Print statistics
+        raioMin = min([x.objectives[0] for x in self.archive])
+        bodeMin = min([x.objectives[1] for x in self.archive])
+        iseMin = min([x.objectives[2] for x in self.archive])
+        print(str(round(self.nfe / self.swarm_size)) + " \t| " + str(raioMin) + " \t| " + str(
+            bodeMin) + " \t| " + str(iseMin))
+
+        # Add to the historic
+        self.historic.append([raioMin, bodeMin, iseMin])
 
     def _mutate(self):
         for i in range(self.swarm_size):
@@ -994,11 +1006,26 @@ class SMPSO(ParticleSwarm):
         self.maximum_velocity = [(t.max_value - t.min_value) / 2.0 for t in problem.types]
         self.minimum_velocity = [-(t.max_value - t.min_value) / 2.0 for t in problem.types]
 
+        self.historic = []
+
     def initialize(self):
         super(SMPSO, self).initialize()
 
         if self.mutate is None:
             self.mutate = default_mutator(self.problem)
+
+    def iterate(self):
+        super(SMPSO, self).iterate()
+
+        # Print statistics
+        raioMin = min([x.objectives[0] for x in self.particles])
+        bodeMin = min([x.objectives[1] for x in self.particles])
+        iseMin = min([x.objectives[2] for x in self.particles])
+        print(str(round(self.nfe / self.swarm_size)) + " \t| " + str(raioMin) + " \t| " + str(
+            bodeMin) + " \t| " + str(iseMin))
+
+        # Add to the historic
+        self.historic.append([raioMin, bodeMin, iseMin])
 
     def _update_velocities(self):
         for i in range(self.swarm_size):
