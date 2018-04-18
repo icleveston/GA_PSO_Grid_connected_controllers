@@ -43,7 +43,7 @@ def normalizeResults(data, attenuation=False):
         return []
 
 
-def plotHistoric(geracao, raio, bode, ise, together=True):
+def plotHistoric(geracao, raio=[], bode=[], ise=[], together=True, title=''):
 
     if together:
 
@@ -114,22 +114,23 @@ def plotHistoric(geracao, raio, bode, ise, together=True):
         plt.plot(geracao, raio)
         plt.grid()
         plt.xlabel("Geração")
-        plt.ylabel("Raio")
+        plt.ylabel("Custo")
+        plt.title(title)
         plt.show()
 
-        plt.plot(geracao, bode)
-        plt.grid()
-        plt.xlabel("Geração")
-        plt.ylabel("Bode")
-        plt.show()
-
-        ise = [x if x < 1e10 else 1.8e5 for x in ise]
-
-        plt.plot(geracao, ise)
-        plt.grid()
-        plt.xlabel("Geração")
-        plt.ylabel("ISE")
-        plt.show()
+        # plt.plot(geracao, bode)
+        # plt.grid()
+        # plt.xlabel("Geração")
+        # plt.ylabel("Bode")
+        # plt.show()
+        #
+        # ise = [x if x < 1e10 else 1.8e5 for x in ise]
+        #
+        # plt.plot(geracao, ise)
+        # plt.grid()
+        # plt.xlabel("Geração")
+        # plt.ylabel("ISE")
+        # plt.show()
 
 # Plot the function 3D
 def plotFunction3D(fitness, limitMin=0, limitMax=10, step=0.005, xlabel='x', ylabel='y', zlabel='Custo', title=""):

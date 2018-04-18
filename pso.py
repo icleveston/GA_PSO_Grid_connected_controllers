@@ -46,8 +46,8 @@ class PSO:
 
     def _updateParticle(self, part, best, phi1, phi2, w):
 
-        u1 = (random.uniform(0, phi1) for _ in range(len(part)))
-        u2 = (random.uniform(0, phi2) for _ in range(len(part)))
+        u1 = (w*random.uniform(0, phi1) for _ in range(len(part)))
+        u2 = (w*random.uniform(0, phi2) for _ in range(len(part)))
         v_u1 = map(operator.mul, u1, map(operator.sub, part.best, part))
         v_u2 = map(operator.mul, u2, map(operator.sub, best, part))
 
@@ -62,10 +62,10 @@ class PSO:
         part[:] = list(map(operator.add, part, part.speed))
 
         # Random particle's position if it exceeds the limit
-        if part[0] > 10 or part[0] < 0 or part[1] > 10 or part[1] < 0:
-            part[:] = [random.uniform(0, 10) for _ in range(2)]
+        if part[0] > self.limSup[0] or part[0] < self.limInf[0] or part[1] > self.limSup[1] or part[1] < self.limInf[1]:
+            part[:] = [random.uniform(self.limInf[x], self.limSup[x]) for x in range(len(self.limSup))]
 
-    def run(self, nGenerations=1000, saveEpoch=5):
+    def run(self, nGenerations=1000, saveEpoch=5, method='modified', verbose=True):
 
         self.toolbox.register("particle", self._generate, size=len(self.limSup), pmin=self.limInf, pmax=self.limSup,
                               smin=self.smin, smax=self.smax)
@@ -85,18 +85,19 @@ class PSO:
 
         best = None
         results = []
+        evaluationTotal = 0
         count = 0
+        counter = 0
         w = 1
+        g = 0
+        minRaio = 0
 
-        res = {'pop': copy.deepcopy(pop), 'best': False}
-
-        results.append(res)
-
-        for g in range(nGenerations+1):
+        while (method == 'modified' and g < 25000) or (g < nGenerations and method != 'modified'):
 
             for part in pop:
 
                 part.fitness.values = self.toolbox.evaluate(part)
+                evaluationTotal = evaluationTotal + 1
 
                 if not part.best or part.best.fitness < part.fitness:
                     part.best = creator.Particle(part)
@@ -111,17 +112,33 @@ class PSO:
 
             # Gather all the fitnesses in one list and print the stats
             logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
-            print(logbook.stream + "\t\t" + str(best.fitness.values))
+
+            if verbose:
+                print(logbook.stream + "\t\t" + str(best.fitness.values))
 
             if count == saveEpoch:
 
-                res = {'pop': copy.deepcopy(pop), 'best': copy.deepcopy(best)}
-
-                results.append(res)
+                results.append(best.fitness.values[0])
                 count = 0
+
+            if method == 'modified':
+
+                # Verifica estagnacao
+                if round(best.fitness.values[0], 3) == minRaio:
+                    counter = counter + 1
+                else:
+                    counter = 0
+
+                # Atualiza as referencias
+                minRaio = round(best.fitness.values[0], 3)
+
+                # Se estourou o limite, termina execucao
+                if counter >= nGenerations:
+                    break
 
             count = count + 1
 
             w = w - w / (nGenerations)
+            g = g + 1
 
-        return pop, logbook, best, results
+        return pop, logbook, best, results, evaluationTotal

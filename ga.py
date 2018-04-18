@@ -92,7 +92,7 @@ class Ga:
     #
     #     return pcls(ind_init(c) for c in population)
 
-    def run(self, method='modified', nGenerations=10, crossOver=0.5, mutation=0.1, initPop=None, saveGeneration=20):
+    def run(self, method='modified', nGenerations=10, crossOver=0.5, mutation=0.1, initPop=None, saveGeneration=20, verbose=True):
 
         self.toolbox.register("individual_guess", self._initIndividual, creator.Individual)
         self.toolbox.register("population_guess", self._initPopulation, list, self.toolbox.individual_guess)
@@ -111,13 +111,11 @@ class Ga:
                                   indpb=0.05)
             self.toolbox.register("select", tools.selNSGA2)
             hof = tools.ParetoFront()
-            print("Multi Objetive")
         else:
             self.toolbox.register("mate", tools.cxOnePoint)
-            self.toolbox.register("mutate", tools.mutUniformInt, low=0, up=10, indpb=0.01)
+            self.toolbox.register("mutate", tools.mutUniformInt, low=self.limInf, up=self.limSup, indpb=0.01)
             self.toolbox.register("select", tools.selTournament, tournsize=2)
             hof = tools.HallOfFame(3)
-            print("Mono Objetive")
 
         stats = tools.Statistics(key=lambda ind: ind.fitness.values)
         stats.register("min", np.min, axis=0)
@@ -142,15 +140,15 @@ class Ga:
         file.write("Weights: " + str(self.weights) + "\n")
         file.close()
 
-        population, logbook, statsPopulation = self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, stats=stats, ngen=nGenerations, halloffame=hof,
-                       saveGeneration=saveGeneration, path=self.path)
+        #population, logbook, statsPopulation = self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, stats=stats, ngen=nGenerations, halloffame=hof,
+        #                saveGeneration=saveGeneration, path=self.path, verbose=verbose)
 
-        # population, logbook, statsPopulation = self._eaMuPlusLambdaModified(pop, self.toolbox, mu=round(self.populationSize), lambda_=10,
-        #                       cxpb=crossOver,
-        #                       mutpb=mutation, nGeneration=nGenerations, method=method, halloffame=hof, stats=stats,
-        #                       saveGeneration=saveGeneration, verbose=True, path=self.path)
+        population, logbook, statsPopulation, evaluationTotal = self._eaMuPlusLambdaModified(pop, self.toolbox, mu=self.populationSize, lambda_=self.populationSize,
+                             cxpb=crossOver,
+                             mutpb=mutation, nGeneration=nGenerations, method=method, halloffame=hof, stats=stats,
+                             saveGeneration=saveGeneration, verbose=verbose, path=self.path)
 
-        return hof, population, logbook, statsPopulation
+        return hof, population, logbook, statsPopulation, evaluationTotal
 
     def _eaMuPlusLambdaModified(self, population, toolbox, mu, lambda_, cxpb, mutpb, nGeneration, path,
                                 method='modified',
@@ -160,10 +158,8 @@ class Ga:
         saveGen = saveGeneration
         counter = 0
         minRaio = 0
-        minBode = 0
-        minIse = 0
-        minDerivada = 0
         statsPopulation = []
+        evaluationTotal = 0
 
         logbook = tools.Logbook()
         logbook.header = ['gen', 'nevals'] + (stats.fields if stats else [])
@@ -173,6 +169,8 @@ class Ga:
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
+
+        evaluationTotal = evaluationTotal + len(invalid_ind)
 
         if halloffame is not None:
             halloffame.update(population)
@@ -184,7 +182,7 @@ class Ga:
             print(logbook.stream)
 
         # Begin the generational process
-        while (method == 'modified') or (gen < nGeneration and method != 'modified'):
+        while (method == 'modified' and gen < 25000) or (gen < nGeneration and method != 'modified'):
 
             # Vary the population
             offspring = algorithms.varOr(population, toolbox, lambda_, cxpb, mutpb)
@@ -194,6 +192,8 @@ class Ga:
             fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
             for ind, fit in zip(invalid_ind, fitnesses):
                 ind.fitness.values = fit
+
+            evaluationTotal = evaluationTotal + len(invalid_ind)
 
             # Update the hall of fame with the generated individuals
             if halloffame is not None:
@@ -210,7 +210,7 @@ class Ga:
                 print(logbook.stream)
 
             if saveGen == saveGeneration:
-                statsPopulation.append(np.asarray(copy.deepcopy(population)))
+                statsPopulation.append(halloffame[0].fitness.values[0])
                 saveGen = 0
 
             saveGen = saveGen + 1
@@ -220,27 +220,22 @@ class Ga:
             if method == 'modified':
 
                 # Verifica estagnacao
-                if round(record['min'][0], 4) == minRaio \
-                        and round(record['min'][1], 4) == minBode \
-                        and round(record['min'][2] / 1e4, 3) == minIse:
+                if round(halloffame[0].fitness.values[0], 4) == minRaio:
                     counter = counter + 1
                 else:
                     counter = 0
 
                 # Atualiza as referencias
-                minRaio = round(record['min'][0], 4)
-                minBode = round(record['min'][1], 4)
-                minIse = round(record['min'][2] / 1e4, 3)
-                # minDerivada = round(record['min'][3], 4)
+                minRaio = round(halloffame[0].fitness.values[0], 3)
 
                 # Se estourou o limite, termina execucao
                 if counter >= nGeneration:
                     break
 
-        return population, logbook, statsPopulation
+        return population, logbook, statsPopulation, evaluationTotal
 
     def _eaSimple(self, population, toolbox, cxpb, mutpb, ngen, stats=None,
-                  halloffame=None, path='', saveGeneration=0, ):
+                  halloffame=None, path='', saveGeneration=0, verbose=True):
 
         statsPopulation = []
         saveGen = saveGeneration
@@ -259,6 +254,9 @@ class Ga:
 
         record = stats.compile(population) if stats else {}
         logbook.record(gen=0, nevals=len(invalid_ind), **record)
+
+        if verbose:
+            print(logbook.stream)
 
         statsPopulation.append(np.asarray(copy.deepcopy(population)))
 
@@ -283,7 +281,8 @@ class Ga:
             # Replace the current population by the offspring
             population[:] = offspring
 
-            print(logbook.stream)
+            if verbose:
+                print(logbook.stream)
 
             if saveGen == saveGeneration:
                 statsPopulation.append(np.asarray(copy.deepcopy(population)))
