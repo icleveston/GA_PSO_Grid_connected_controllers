@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import multiprocessing
+import multiprocessing as mp
 from scipy.stats.distributions import norm
+from datetime import datetime
 from deap import creator, base, tools, algorithms
 from pyDOE import *
 import copy
@@ -12,7 +13,7 @@ import numpy as np
 
 class Ga:
 
-    def __init__(self, fitnessFunction, limInf, limSup, path, weights, x0=[], populationSize=100):
+    def __init__(self, fitnessFunction, limInf, limSup, path, weights, x0=[], populationSize=100, multiprocessing=False):
 
         self.fitnessFunction = fitnessFunction
         self.limInf = limInf
@@ -21,13 +22,17 @@ class Ga:
         self.populationSize = populationSize
         self.path = path
         self.weights = weights
+        self.multiprocessing = multiprocessing
 
         creator.create("FitnessMulti", base.Fitness, weights=self.weights)
         creator.create("Individual", list, fitness=creator.FitnessMulti)
 
         self.toolbox = base.Toolbox()
-        # self.pool = multiprocessing.Pool()
-        # self.toolbox.register("map", self.pool.map)
+
+        if self.multiprocessing:
+
+            self.pool = mp.Pool()
+            self.toolbox.register("map", self.pool.map)
 
     def _initIndividual(self, icls, content):
 
@@ -92,6 +97,9 @@ class Ga:
 
     def run(self, method='modified', nGenerations=10, crossOver=0.5, mutation=0.1, initPop=None, saveGeneration=20, verbose=True):
 
+        # Start time
+        start_time = datetime.now()
+
         self.toolbox.register("individual_guess", self._initIndividual, creator.Individual)
         self.toolbox.register("population_guess", self._initPopulation, list, self.toolbox.individual_guess)
 
@@ -120,6 +128,19 @@ class Ga:
         stats.register("mean", np.mean, axis=0)
         stats.register("max", np.max, axis=0)
 
+        #population, logbook, statsPopulation = self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, stats=stats, ngen=nGenerations, halloffame=hof,
+        #                saveGeneration=saveGeneration, verbose=verbose)
+
+        population, logbook, statsPopulation, evaluationTotal = self._eaMuPlusLambdaModified(pop, self.toolbox, mu=self.populationSize, lambda_=self.populationSize,
+                             cxpb=crossOver,
+                             mutpb=mutation, nGeneration=nGenerations, method=method, halloffame=hof, stats=stats,
+                             saveGeneration=saveGeneration, verbose=verbose)
+
+        # End time
+        end_time = datetime.now()
+
+        elapsed_time = end_time - start_time
+
         # Save parameters
         file = open(self.path + '/parameters.txt', "w")
         file.write("Method: GA - " + method + "\n")
@@ -136,19 +157,39 @@ class Ga:
         file.write("Limit Max: " + str(self.limSup) + "\n")
         file.write("Limit Min: " + str(self.limInf) + "\n")
         file.write("Weights: " + str(self.weights) + "\n")
+        file.write("Elapsed Time: " + str(elapsed_time) + "\n")
         file.close()
 
-        #population, logbook, statsPopulation = self._eaSimple(pop, self.toolbox, cxpb=crossOver, mutpb=mutation, stats=stats, ngen=nGenerations, halloffame=hof,
-        #                saveGeneration=saveGeneration, path=self.path, verbose=verbose)
+        # Save generation
+        output = open(self.path + "/statsPopulation.pkl", 'wb')
+        pickle.dump(statsPopulation, output)
+        output.close()
 
-        population, logbook, statsPopulation, evaluationTotal = self._eaMuPlusLambdaModified(pop, self.toolbox, mu=self.populationSize, lambda_=self.populationSize,
-                             cxpb=crossOver,
-                             mutpb=mutation, nGeneration=nGenerations, method=method, halloffame=hof, stats=stats,
-                             saveGeneration=saveGeneration, verbose=verbose, path=self.path)
+        # Select the historic
+        genMin, genMean, genMax = logbook.select("min", 'mean', 'max')
 
-        return hof, population, logbook, statsPopulation, evaluationTotal
+        # Save historic
+        output = open(self.path + "/historic.pkl", 'wb')
+        pickle.dump([genMin, genMean, genMax], output)
+        output.close()
 
-    def _eaMuPlusLambdaModified(self, population, toolbox, mu, lambda_, cxpb, mutpb, nGeneration, path,
+        info = {
+            'bestInd': list(hof[0]),
+            'bestVal': self.fitnessFunction(hof[0]),
+            'evalTotal': evaluationTotal,
+            'elapsedTime': str(elapsed_time),
+            'nGeneration': len(genMin)
+        }
+
+        # Save additional information
+        output = open(self.path + "/info.pkl", 'wb')
+        pickle.dump(info, output)
+        output.close()
+
+        return hof
+
+
+    def _eaMuPlusLambdaModified(self, population, toolbox, mu, lambda_, cxpb, mutpb, nGeneration,
                                 method='modified',
                                 stats=None, halloffame=None, saveGeneration=0, verbose=True):
 
@@ -164,8 +205,7 @@ class Ga:
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in population if not ind.fitness.valid]
-        fitnesses = list(map(toolbox.evaluate, invalid_ind))
-        # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
@@ -235,7 +275,7 @@ class Ga:
         return population, logbook, statsPopulation, evaluationTotal
 
     def _eaSimple(self, population, toolbox, cxpb, mutpb, ngen, stats=None,
-                  halloffame=None, path='', saveGeneration=0, verbose=True):
+                  halloffame=None, saveGeneration=0, verbose=True):
 
         statsPopulation = []
         saveGen = saveGeneration

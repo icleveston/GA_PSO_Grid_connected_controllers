@@ -4,7 +4,6 @@
 import os
 from platypus import *
 from helpers import *
-from Simulation.TheProblem import TheProblem
 import pickle
 import time
 import matlab.engine
@@ -12,189 +11,185 @@ import matlab.engine
 limSup = [0,    0,    0,   0, 100,  0, 50,  0, 50,  0, 50, 0]
 limInf = [-15, -15, -15, -15, 0, -100, 0, -50, 0, -50, 0, -50]
 
+def executeNSGA2(self, population_size=100, ngen=100, crossover_rate=0.8, mutation_rate=0.2):
 
-class Simulation:
+    # The new simulation path
+    path = 'Simulation/' + time.strftime("%m-%d-%Y-%H-%M-%S") + ' - NSGA2'
 
-    def __init__(self):
+    # Create the simulation directory
+    os.mkdir(path)
 
-        self.eng = matlab.engine.start_matlab()
+    # Initialize the algorithm
+    algorithm = NSGAII(self.problem, population_size=population_size,
+                       variator=GAOperator(SBX(probability=crossover_rate), PM(probability=mutation_rate)))
 
-        self.c = self.eng.Controle()
+    # Start time
+    start_time = time.time()
 
-        self.problem = TheProblem(self.eng, self.c)
+    # Run the algorithm
+    algorithm.run(ngen * population_size)
 
-    def executeNSGA2(self, population_size=100, ngen=100, crossover_rate=0.8, mutation_rate=0.2):
+    # Get the pareto front
+    results = nondominated(algorithm.result)
 
-        # The new simulation path
-        path = 'Simulation/' + time.strftime("%m-%d-%Y-%H-%M-%S") + ' - NSGA2'
+    # End time
+    end_time = time.time()
 
-        # Create the simulation directory
-        os.mkdir(path)
+    elapsed_time = end_time - start_time
 
-        # Initialize the algorithm
-        algorithm = NSGAII(self.problem, population_size=population_size,
-                           variator=GAOperator(SBX(probability=crossover_rate), PM(probability=mutation_rate)))
+    # Save parameters
+    file = open(path + '/parameters.txt', "w")
+    file.write("Method: NSGA-II\n")
+    file.write("N Population: " + str(population_size) + "\n")
+    file.write("N Generation: " + str(ngen) + "\n")
+    file.write("Crossover Rate: " + str(crossover_rate) + "\n")
+    file.write("Mutation Rate: " + str(mutation_rate) + "\n")
+    file.write("Elapsed Time: " + str(time.strftime("%H:%M:%S", time.gmtime(elapsed_time))) + "\n")
+    file.close()
 
-        # Start time
-        start_time = time.time()
+    pareto = []
 
-        # Run the algorithm
-        algorithm.run(ngen * population_size)
+    for ind in results:
+        res = {'ind': list(ind.variables), 'val': list(ind.objectives)}
+        pareto.append(res)
 
-        # Get the pareto front
-        results = nondominated(algorithm.result)
+    # Save the pareto front
+    output = open(path + '/pareto.pkl', 'wb')
+    pickle.dump(pareto, output)
+    output.close()
 
-        # End time
-        end_time = time.time()
+    # Save the pareto front
+    output = open(path + '/historic.pkl', 'wb')
+    pickle.dump(algorithm.historic, output)
+    output.close()
 
-        elapsed_time = end_time - start_time
+    return path
 
-        # Save parameters
-        file = open(path + '/parameters.txt', "w")
-        file.write("Method: NSGA-II\n")
-        file.write("N Population: " + str(population_size) + "\n")
-        file.write("N Generation: " + str(ngen) + "\n")
-        file.write("Crossover Rate: " + str(crossover_rate) + "\n")
-        file.write("Mutation Rate: " + str(mutation_rate) + "\n")
-        file.write("Elapsed Time: " + str(time.strftime("%H:%M:%S", time.gmtime(elapsed_time))) + "\n")
-        file.close()
 
-        pareto = []
+def executeMOPSO(self, swarm_size=500, ngen=300):
 
-        for ind in results:
-            res = {'ind': list(ind.variables), 'val': list(ind.objectives)}
-            pareto.append(res)
+    # The new simulation path
+    path = 'Simulation/' + time.strftime("%m-%d-%Y-%H-%M-%S") + ' - MOPSO'
 
-        # Save the pareto front
-        output = open(path + '/pareto.pkl', 'wb')
-        pickle.dump(pareto, output)
-        output.close()
+    # Create the simulation directory
+    os.mkdir(path)
 
-        # Save the pareto front
-        output = open(path + '/historic.pkl', 'wb')
-        pickle.dump(algorithm.historic, output)
-        output.close()
+    # Initialize the algorithm
+    algorithm = OMOPSO(self.problem, swarm_size=swarm_size, epsilons=[0.05])
 
-        return path
+    # Start time
+    start_time = time.time()
 
+    # Run the algorithm
+    algorithm.run(ngen * swarm_size)
 
-    def executeMOPSO(self, swarm_size=500, ngen=300):
+    # Get the pareto front
+    results = algorithm.result
 
-        # The new simulation path
-        path = 'Simulation/' + time.strftime("%m-%d-%Y-%H-%M-%S") + ' - MOPSO'
+    # End time
+    end_time = time.time()
 
-        # Create the simulation directory
-        os.mkdir(path)
+    elapsed_time = end_time - start_time
 
-        # Initialize the algorithm
-        algorithm = OMOPSO(self.problem, swarm_size=swarm_size, epsilons=[0.05])
+    # Save parameters
+    file = open(path + '/parameters.txt', "w")
+    file.write("Method: MOPSO\n")
+    file.write("N Swarm: " + str(swarm_size) + "\n")
+    file.write("N Generation: " + str(ngen) + "\n")
+    # file.write("Phi1: " + str(crossover_rate) + "\n")
+    # file.write("Phi2: " + str(mutation_rate) + "\n")
+    file.write("Elapsed Time: " + str(time.strftime("%H:%M:%S", time.gmtime(elapsed_time))) + "\n")
+    file.close()
 
-        # Start time
-        start_time = time.time()
+    pareto = []
 
-        # Run the algorithm
-        algorithm.run(ngen * swarm_size)
+    for ind in results:
+        res = {'ind': list(ind.variables), 'val': list(ind.objectives)}
+        pareto.append(res)
 
-        # Get the pareto front
-        results = algorithm.result
+    # Save the pareto front
+    output = open(path + '/pareto.pkl', 'wb')
+    pickle.dump(pareto, output)
+    output.close()
 
-        # End time
-        end_time = time.time()
+    # Save the pareto front
+    output = open(path + '/historic.pkl', 'wb')
+    pickle.dump(algorithm.historic, output)
+    output.close()
 
-        elapsed_time = end_time - start_time
+    return path
 
-        # Save parameters
-        file = open(path + '/parameters.txt', "w")
-        file.write("Method: MOPSO\n")
-        file.write("N Swarm: " + str(swarm_size) + "\n")
-        file.write("N Generation: " + str(ngen) + "\n")
-        # file.write("Phi1: " + str(crossover_rate) + "\n")
-        # file.write("Phi2: " + str(mutation_rate) + "\n")
-        file.write("Elapsed Time: " + str(time.strftime("%H:%M:%S", time.gmtime(elapsed_time))) + "\n")
-        file.close()
 
-        pareto = []
+def getReport(self, path):
 
-        for ind in results:
-            res = {'ind': list(ind.variables), 'val': list(ind.objectives)}
-            pareto.append(res)
+    #self.plotHistoric(path)
 
-        # Save the pareto front
-        output = open(path + '/pareto.pkl', 'wb')
-        pickle.dump(pareto, output)
-        output.close()
+    file = open(path + '/pareto.pkl', 'rb')
 
-        # Save the pareto front
-        output = open(path + '/historic.pkl', 'wb')
-        pickle.dump(algorithm.historic, output)
-        output.close()
+    data = pickle.load(file)
 
-        return path
+    print(len(data))
 
+    # Normalize data
+    a = normalizeResults(data, attenuation=False)
 
-    def getReport(self, path):
+    if len(a) > 0:
 
-        #self.plotHistoric(path)
+        for i in a[0:3]:
 
-        file = open(path + '/pareto.pkl', 'rb')
+            print(i['ind'])
+            print(i['val'])
 
-        data = pickle.load(file)
+            plotConversor(i['ind'], self.eng, self.c)
 
-        print(len(data))
 
-        # Normalize data
-        a = normalizeResults(data, attenuation=False)
+def plotHistoric(self, path):
 
-        if len(a) > 0:
+    file = open(path + '/historic.pkl', 'rb')
 
-            for i in a[0:3]:
+    data = pickle.load(file)
 
-                print(i['ind'])
-                print(i['val'])
+    raio = []
+    bode = []
+    ise = []
 
-                plotConversor(i['ind'], self.eng, self.c)
+    for x in data:
+        raio.append(x[0])
+        bode.append(x[1])
+        ise.append(x[2])
 
+    geracao = [x for x in range(0, len(raio))]
 
-    def plotHistoric(self, path):
+    # Plot the historic
+    plotHistoric(geracao, raio, bode, ise)
 
-        file = open(path + '/historic.pkl', 'rb')
 
-        data = pickle.load(file)
+def compare(self, path1, path2):
 
-        raio = []
-        bode = []
-        ise = []
+    file = open(path1 + '/pareto.pkl', 'rb')
 
-        for x in data:
-            raio.append(x[0])
-            bode.append(x[1])
-            ise.append(x[2])
+    data = pickle.load(file)
 
-        geracao = [x for x in range(0, len(raio))]
+    data_solution = []
 
-        # Plot the historic
-        plotHistoric(geracao, raio, bode, ise)
+    problem = TheProblem(self.eng, self.c)
 
+    for e in data:
+        s = Solution(problem, e['ind'], e['val'])
+        data_solution.append(s)
 
-    def compare(self, path1, path2):
 
-        file = open(path1 + '/pareto.pkl', 'rb')
+    # Create the hypervolume
+    hyp = Hypervolume(minimum=[0, 0, 0], maximum=[2, 2, 2])
 
-        data = pickle.load(file)
+    hyp_result = hyp.calculate(data_solution)
 
-        data_solution = []
+    print(hyp_result)
 
-        problem = TheProblem(self.eng, self.c)
+if __name__ == '__main__':
 
-        for e in data:
-            s = Solution(problem, e['ind'], e['val'])
-            data_solution.append(s)
+    eng = matlab.engine.start_matlab()
 
+    c = eng.Controle()
 
-        # Create the hypervolume
-        hyp = Hypervolume(minimum=[0, 0, 0], maximum=[2, 2, 2])
-
-        hyp_result = hyp.calculate(data_solution)
-
-        print(hyp_result)
-
+    problem = TheProblem(eng, c)

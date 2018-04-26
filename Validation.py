@@ -8,11 +8,10 @@ from pso import *
 from platypus import *
 from datetime import datetime
 from tabulate import tabulate
-from Validation import Be
+from Benchmark import Benchmark
 
 
-def executeGA(info, population_size, ngen, crossover_rate, mutation_rate, path, method='other'):
-
+def executeGA(info, population_size, ngen, crossover_rate, mutation_rate, path, method='other', multiprocessing=False):
     now = datetime.now()
 
     # The new simulation path
@@ -21,61 +20,16 @@ def executeGA(info, population_size, ngen, crossover_rate, mutation_rate, path, 
     # Create the simulation directory
     os.mkdir(pathResult)
 
-    # Start time
-    start_time = datetime.now()
-
     ga = Ga(info.fitness, limInf=info.limitInf, limSup=info.limitSup, populationSize=population_size,
             path=pathResult,
-            weights=(-1,))
+            weights=(-1,), multiprocessing=multiprocessing)
 
-    hof, _, logbook, statsPopulation, evaluationTotal = ga.run(nGenerations=ngen, crossOver=crossover_rate,
-                                                               mutation=mutation_rate,
-                                                               method=method, saveGeneration=1, verbose=False)
+    hof = ga.run(nGenerations=ngen, crossOver=crossover_rate,
+                 mutation=mutation_rate,
+                 method=method, saveGeneration=1, verbose=False)
 
-    # End time
-    end_time = datetime.now()
 
-    elapsed_time = end_time - start_time
-
-    # Save parameters
-    file = open(pathResult + '/parameters.txt', "w")
-    file.write("Method: GA\n")
-    file.write("Fitness Function: " + info.name + "\n")
-    file.write("N Population: " + str(population_size) + "\n")
-    file.write("N Generation: " + str(ngen) + "\n")
-    file.write("Crossover Rate: " + str(crossover_rate) + "\n")
-    file.write("Mutation Rate: " + str(mutation_rate) + "\n")
-    file.write("Elapsed Time: " + str(elapsed_time) + "\n")
-    file.close()
-
-    # Save generation
-    output = open(pathResult + "/statsPopulation.pkl", 'wb')
-    pickle.dump(statsPopulation, output)
-    output.close()
-
-    # Select the historic
-    genMin, genMean, genMax = logbook.select("min", 'mean', 'max')
-
-    # Save historic
-    output = open(pathResult + "/historic.pkl", 'wb')
-    pickle.dump([genMin, genMean, genMax], output)
-    output.close()
-
-    info = {
-        'bestInd': list(hof[0]),
-        'bestVal': info.fitness(hof[0]),
-        'evalTotal': evaluationTotal,
-        'elapsedTime': str(elapsed_time),
-        'nGeneration': len(genMin)
-    }
-
-    # Save additional information
-    output = open(pathResult + "/info.pkl", 'wb')
-    pickle.dump(info, output)
-    output.close()
-
-def executePSO(info, population_size, ngen, phi1, phi2, path, method='other'):
-
+def executePSO(info, population_size, ngen, phi1, phi2, path, method='other', multiprocessing=False):
     now = datetime.now()
 
     # The new simulation path
@@ -84,60 +38,15 @@ def executePSO(info, population_size, ngen, phi1, phi2, path, method='other'):
     # Create the simulation directory
     os.mkdir(pathResult)
 
-    # Start time
-    start_time = datetime.now()
-
     # Set the PSO
-    pso = PSO(info.fitness, limInf=info.limitInf, limSup=info.limitSup, populationSize=population_size, path=path,
-              weights=(-1,), phi1=phi1, phi2=phi2)
+    pso = PSO(info.fitness, limInf=info.limitInf, limSup=info.limitSup, populationSize=population_size, path=pathResult,
+              weights=(-1,), phi1=phi1, phi2=phi2, multiprocessing=multiprocessing)
 
     # Run the PSO
-    pop, logbook, best, statsPopulation, evaluationTotal = pso.run(nGenerations=ngen, saveEpoch=1, verbose=False, method=method)
+    best = pso.run(nGenerations=ngen, saveEpoch=1, verbose=False, method=method)
 
-    # End time
-    end_time = datetime.now()
-
-    elapsed_time = end_time - start_time
-
-    # Save parameters
-    file = open(pathResult + '/parameters.txt', "w")
-    file.write("Method: PSO\n")
-    file.write("Fitness Function: " + info.name + "\n")
-    file.write("N Population: " + str(population_size) + "\n")
-    file.write("N Generation: " + str(ngen) + "\n")
-    file.write("phi1: " + str(phi1) + "\n")
-    file.write("phi2: " + str(phi2) + "\n")
-    file.write("Elapsed Time: " + str(elapsed_time) + "\n")
-    file.close()
-
-    # Save generation
-    output = open(pathResult + "/statsPopulation.pkl", 'wb')
-    pickle.dump(statsPopulation, output)
-    output.close()
-
-    # Select the historic
-    genMin, genMean, genMax = logbook.select("min", 'mean', 'max')
-
-    # Save historic
-    output = open(pathResult + "/historic.pkl", 'wb')
-    pickle.dump([genMin, genMean, genMax], output)
-    output.close()
-
-    info = {
-        'bestInd': list(best),
-        'bestVal': info.fitness(best),
-        'evalTotal': evaluationTotal,
-        'elapsedTime': str(elapsed_time),
-        'nGeneration': len(genMin)
-    }
-
-    # Save additional information
-    output = open(pathResult + "/info.pkl", 'wb')
-    pickle.dump(info, output)
-    output.close()
 
 def validateNSGA2():
-
     # 3 objetivos, 12 variaveis
     problem = DTLZ2(3, 12)
 
@@ -177,12 +86,8 @@ def validateNSGA2():
     fig.legend([ind], ["Indivíduo"], ncol=1, loc=8)
     plt.show()
 
-    # convergence()
-    # diversity()
-    # scipy.stats.mannwhitneyu()
 
 def validateMOPSO():
-
     # 3 objetivos, 12 variaveis
     problem = DTLZ2(3, 12)
 
@@ -222,16 +127,14 @@ def validateMOPSO():
     fig.legend([part], ["Partícula"], ncol=1, loc=8)
     plt.show()
 
-def compareMO():
 
+def compareMO():
     # 3 objetivos, 12 variaveis
     problem = DTLZ2(3, 12)
 
     algorithms = [
-        # SPEA2,
         NSGAII,
         (OMOPSO, {"epsilons": [0.05]})
-        # SMPSO
     ]
 
     # Run the experimenter
@@ -270,18 +173,7 @@ def compareMO():
 
     plt.show()
 
-def plotFitness3D(fitness):
-    plotFunction3D(fitness, limitMin=0, limitMax=10, step=0.005)
-
-def plotFitnessContour(fitness):
-    plotFunctionCountour(fitness, limitMin=0, limitMax=10, step=0.005, legend=True)
-
-def plotFitnessEvolutionContour(fitness, all, title, legend):
-
-    plotFunctionCountour(fitness, limitMin=0, limitMax=10, step=0.005, all=all, title=title, legend=legend)
-
 def summary(path, plot=False):
-
     results = []
     sucessoGa = []
     sucessoPSO = []
@@ -299,7 +191,7 @@ def summary(path, plot=False):
         dataPrint = [
             method,
             str(round(info['bestVal'][0], 3)),
-            str(list(map(lambda x:round(x, 3), info['bestInd']))),
+            str(list(map(lambda x: round(x, 3), info['bestInd']))),
             str(info['elapsedTime']),
             info['evalTotal'],
             info['nGeneration'],
@@ -330,8 +222,8 @@ def summary(path, plot=False):
         'Sucesso'
     ], tablefmt="pipe"))
 
-    print('Sucesso GA: ' + str(sum(sucessoGa)/len(sucessoGa)*100) + '%')
-    print('Sucesso PSO: ' + str(sum(sucessoPSO)/len(sucessoPSO)*100) + '%')
+    print('Sucesso GA: ' + str(sum(sucessoGa) / len(sucessoGa) * 100) + '%')
+    print('Sucesso PSO: ' + str(sum(sucessoPSO) / len(sucessoPSO) * 100) + '%')
 
     if plot:
 
@@ -342,13 +234,12 @@ def summary(path, plot=False):
 
             stats = pickle.load(statsFile)
 
-            geracao = list(range(1, len(stats)+1))
+            geracao = list(range(1, len(stats) + 1))
 
             plotHistoric(geracao, raio=stats, together=False, title=method)
 
 
 def plotProgress(fitness, path):
-
     file = open(path + '/paretoFrontier.pkl', 'rb')
 
     data = pickle.load(file)
@@ -365,17 +256,16 @@ def plotProgress(fitness, path):
     title = ['Geração ' + str(2 * i) for i in range(0, len(results))]
 
     # Plot the evolution
-    plotFitnessEvolutionContour(results, title=title, legend='Indivíduo')
-
+    plotFunctionCountour(results, title=title, legend='Indivíduo')
 
 
 if __name__ == '__main__':
 
     now = datetime.now()
 
-    a = Benchmark(nvar=12).getBohachevskyInfo()
-    b = Benchmark(nvar=12).getSchafferInfo()
-    c = Benchmark(nvar=12).getSchwefelInfo()
+    a = Benchmark(nvar=2).getBohachevskyInfo()
+    b = Benchmark(nvar=2).getSchafferInfo()
+    c = Benchmark(nvar=2).getSchwefelInfo()
 
     infos = [a, b, c]
 
@@ -389,16 +279,16 @@ if __name__ == '__main__':
 
         print("\n\n---------------------------------- " + info.name + "-----------------------------------------------")
 
-        for i in range(100):
+        for i in range(10):
             # Execute the ga
             # executeGA(info, population_size=1000, ngen=1000, crossover_rate=0.8, mutation_rate=0.2, path=path)
             executeGA(info, population_size=1000, ngen=300, crossover_rate=0.8, mutation_rate=0.2, path=path,
-                             method='modified')
+                      method='modified', multiprocessing=False)
 
             # Execute the pso
             # executePSO(info, population_size=1000, ngen=1000, phi1=0.5, phi2=0.5, path=path)
-            executePSO(info, population_size=1000, ngen=5000, phi1=0.5, phi2=0.5, path=path,
-                             method='modified')
+            executePSO(info, population_size=1000, ngen=300, phi1=0.5, phi2=0.5, path=path,
+                       method='modified', multiprocessing=False)
 
         # Show the summary for the experiment
         summary(path, plot=False)

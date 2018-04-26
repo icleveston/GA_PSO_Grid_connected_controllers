@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import multiprocessing
+import multiprocessing as mp
 import operator
-from deap import creator, base, tools, benchmarks
-import Validation
+from deap import creator, base, tools
 from pyDOE import *
 import random
+import pickle
+from datetime import datetime
 import copy
 
 
 class PSO:
 
     def __init__(self, fitnessFunction, limInf, limSup, path, weights, phi1=0.4, phi2=0.6, smin=-0.3, smax=0.3,
-                 populationSize=100):
+                 populationSize=100, multiprocessing=False):
 
         self.fitnessFunction = fitnessFunction
         self.limInf = limInf
@@ -25,13 +26,16 @@ class PSO:
         self.populationSize = populationSize
         self.path = path
         self.weights = weights
+        self.multiprocessing = multiprocessing
 
         creator.create("FitnessMulti", base.Fitness, weights=self.weights)
         creator.create("Particle", list, fitness=creator.FitnessMulti, speed=list, smin=None, smax=None, best=None)
 
         self.toolbox = base.Toolbox()
-        # self.pool = multiprocessing.Pool()
-        # self.toolbox.register("map", self.pool.map)
+
+        if self.multiprocessing:
+            self.pool = mp.Pool()
+            self.toolbox.register("map", self.pool.map)
 
     def _generate(self, size, pmin, pmax, smin, smax):
 
@@ -70,6 +74,9 @@ class PSO:
 
     def run(self, nGenerations=1000, saveEpoch=5, method='modified', verbose=True):
 
+        # Start time
+        start_time = datetime.now()
+
         self.toolbox.register("particle", self._generate, size=len(self.limSup), pmin=self.limInf, pmax=self.limSup,
                               smin=self.smin, smax=self.smax)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.particle)
@@ -97,10 +104,14 @@ class PSO:
 
         while (method == 'modified' and g < 5000) or (g < nGenerations and method != 'modified'):
 
-            for part in pop:
+            popFit = map(lambda x: list(x), pop)
 
-                part.fitness.values = self.toolbox.evaluate(part)
-                evaluationTotal = evaluationTotal + 1
+            fitnesses = self.toolbox.map(self.toolbox.evaluate, popFit)
+
+            for ind, fit in zip(pop, fitnesses):
+                ind.fitness.values = fit
+
+            for part in pop:
 
                 if not part.best or part.best.fitness < part.fitness:
                     part.best = creator.Particle(part)
@@ -144,4 +155,45 @@ class PSO:
             w = w - w / (nGenerations)
             g = g + 1
 
-        return pop, logbook, best, results, evaluationTotal
+        # End time
+        end_time = datetime.now()
+
+        elapsed_time = end_time - start_time
+
+        # Save parameters
+        file = open(self.path + '/parameters.txt', "w")
+        file.write("Method: PSO\n")
+        file.write("N Population: " + str(self.populationSize) + "\n")
+        file.write("N Generation: " + str(nGenerations) + "\n")
+        file.write("phi1: " + str(self.phi1) + "\n")
+        file.write("phi2: " + str(self.phi2) + "\n")
+        file.write("Elapsed Time: " + str(elapsed_time) + "\n")
+        file.close()
+
+        # Save generation
+        output = open(self.path + "/statsPopulation.pkl", 'wb')
+        pickle.dump(results, output)
+        output.close()
+
+        # Select the historic
+        genMin, genMean, genMax = logbook.select("min", 'mean', 'max')
+
+        # Save historic
+        output = open(self.path + "/historic.pkl", 'wb')
+        pickle.dump([genMin, genMean, genMax], output)
+        output.close()
+
+        info = {
+            'bestInd': list(best),
+            'bestVal': self.fitnessFunction(best),
+            'evalTotal': evaluationTotal,
+            'elapsedTime': str(elapsed_time),
+            'nGeneration': len(genMin)
+        }
+
+        # Save additional information
+        output = open(self.path + "/info.pkl", 'wb')
+        pickle.dump(info, output)
+        output.close()
+
+        return best
