@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import multiprocessing
 import operator
 from deap import creator, base, tools, benchmarks
 import Validation
@@ -29,11 +30,13 @@ class PSO:
         creator.create("Particle", list, fitness=creator.FitnessMulti, speed=list, smin=None, smax=None, best=None)
 
         self.toolbox = base.Toolbox()
+        # self.pool = multiprocessing.Pool()
+        # self.toolbox.register("map", self.pool.map)
 
     def _generate(self, size, pmin, pmax, smin, smax):
 
         # Create the particle
-        part = creator.Particle(random.uniform(pmin[x], pmax[x]) for x in range(size))
+        part = creator.Particle(random.uniform(0, 500) for x in range(size))
 
         # Generate the particle speed
         part.speed = [random.uniform(smin, smax) for _ in range(size)]
@@ -92,7 +95,7 @@ class PSO:
         g = 0
         minRaio = 0
 
-        while (method == 'modified' and g < 25000) or (g < nGenerations and method != 'modified'):
+        while (method == 'modified' and g < 5000) or (g < nGenerations and method != 'modified'):
 
             for part in pop:
 
@@ -124,7 +127,7 @@ class PSO:
             if method == 'modified':
 
                 # Verifica estagnacao
-                if round(best.fitness.values[0], 3) == minRaio:
+                if round(best.fitness.values[0], 3) <= minRaio:
                     counter = counter + 1
                 else:
                     counter = 0

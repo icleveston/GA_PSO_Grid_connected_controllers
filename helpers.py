@@ -135,6 +135,8 @@ def plotHistoric(geracao, raio=[], bode=[], ise=[], together=True, title=''):
 # Plot the function 3D
 def plotFunction3D(fitness, limitMin=0, limitMax=10, step=0.005, xlabel='x', ylabel='y', zlabel='Custo', title=""):
 
+    from matplotlib.colors import LogNorm
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     x = y = np.arange(limitMin, limitMax, step)
@@ -142,7 +144,7 @@ def plotFunction3D(fitness, limitMin=0, limitMax=10, step=0.005, xlabel='x', yla
     zs = np.array([fitness([x, y])[0] for x, y in zip(np.ravel(X), np.ravel(Y))])
     Z = zs.reshape(X.shape)
 
-    CS = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
+    CS = ax.plot_surface(X, Y, Z, rstride=10, cstride=10,  norm=LogNorm(), cmap=cm.jet, linewidth=0.2)
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -220,8 +222,8 @@ def plotFunctionCountour(fitness, limitMin=0, limitMax=10, step=0.005, all=[], b
         if title != "":
             plt.title(title)
 
-        plt.xlim(0, 10)
-        plt.ylim(0, 10)
+        plt.xlim(-500, 500)
+        plt.ylim(-500, 500)
         plt.show()
 
 

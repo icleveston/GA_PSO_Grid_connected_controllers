@@ -9,8 +9,6 @@ import copy
 import pickle
 import numpy as np
 
-np.set_printoptions(threshold=np.nan)
-
 
 class Ga:
 
@@ -166,7 +164,8 @@ class Ga:
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in population if not ind.fitness.valid]
-        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        fitnesses = list(map(toolbox.evaluate, invalid_ind))
+        # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
@@ -182,14 +181,15 @@ class Ga:
             print(logbook.stream)
 
         # Begin the generational process
-        while (method == 'modified' and gen < 25000) or (gen < nGeneration and method != 'modified'):
+        while (method == 'modified' and gen < 5000) or (gen < nGeneration and method != 'modified'):
 
             # Vary the population
             offspring = algorithms.varOr(population, toolbox, lambda_, cxpb, mutpb)
 
             # Evaluate the individuals with an invalid fitness
             invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-            fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+            fitnesses = list(map(toolbox.evaluate, invalid_ind))
+            # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
             for ind, fit in zip(invalid_ind, fitnesses):
                 ind.fitness.values = fit
 
@@ -220,13 +220,13 @@ class Ga:
             if method == 'modified':
 
                 # Verifica estagnacao
-                if round(halloffame[0].fitness.values[0], 4) == minRaio:
+                if round(record['min'][0], 3) <= minRaio:
                     counter = counter + 1
                 else:
                     counter = 0
 
                 # Atualiza as referencias
-                minRaio = round(halloffame[0].fitness.values[0], 3)
+                minRaio = round(record['min'][0], 3)
 
                 # Se estourou o limite, termina execucao
                 if counter >= nGeneration:
