@@ -24,8 +24,7 @@ def executeGA(info, population_size, ngen, crossover_rate, mutation_rate, path, 
             path=pathResult,
             weights=(-1,), multiprocessing=multiprocessing)
 
-    hof = ga.run(nGenerations=ngen, crossOver=crossover_rate,
-                 mutation=mutation_rate,
+    hof = ga.run(nGenerations=ngen, crossOver=crossover_rate, mutation=mutation_rate,
                  method=method, saveGeneration=1, verbose=False)
 
 

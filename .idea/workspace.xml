@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b1f6e75a-91a6-44d0-93d7-a83749582046" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/nuvem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controle.m" beforeDir="false" afterPath="$PROJECT_DIR$/Controle.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Validation/Benchmark.py" beforeDir="false" afterPath="$PROJECT_DIR$/Benchmark.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ga.py" beforeDir="false" afterPath="$PROJECT_DIR$/ga.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pso.py" beforeDir="false" afterPath="$PROJECT_DIR$/pso.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,13 +42,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Validation.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Validation.py">
+      <file leaf-file-name="Simulation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="284" column="56" selection-start-line="284" selection-start-column="56" selection-end-line="284" selection-end-column="56" />
+            <state relative-caret-position="323">
+              <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
               <folding>
-                <element signature="e#47#68#0" expanded="true" />
+                <element signature="e#47#56#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pso.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pso.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="108" selection-start-line="108" selection-end-line="108" />
+              <folding>
+                <element signature="e#47#75#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -78,7 +92,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$USER_HOME$/Personal/UFSM/Disciplinas/Processamento Digital de Sinais/Trabalhos/Trabalho_1/fir_filter.py" />
         <option value="$PROJECT_DIR$/Nova pasta/otimiza_projeto_dlqr.m" />
         <option value="$PROJECT_DIR$/matlab/test.m" />
         <option value="$PROJECT_DIR$/deap.py" />
@@ -107,7 +120,6 @@
         <option value="$PROJECT_DIR$/Simulation/15-03-2018-03-29-18/historic.txt" />
         <option value="$PROJECT_DIR$/tcc/validation.py" />
         <option value="$PROJECT_DIR$/tcc/tcc.py" />
-        <option value="$PROJECT_DIR$/Controle.m" />
         <option value="$PROJECT_DIR$/platypus/Platypus-master/platypus/problems.py" />
         <option value="$PROJECT_DIR$/nuvem.py" />
         <option value="$PROJECT_DIR$/itae.py" />
@@ -122,13 +134,15 @@
         <option value="$PROJECT_DIR$/Simulation/Simulation.py" />
         <option value="$PROJECT_DIR$/Validation/Benchmark.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/helpers.py" />
         <option value="$PROJECT_DIR$/tcc.py" />
         <option value="$PROJECT_DIR$/Validation/Validation.py" />
-        <option value="$PROJECT_DIR$/Simulation.py" />
-        <option value="$PROJECT_DIR$/pso.py" />
-        <option value="$PROJECT_DIR$/ga.py" />
         <option value="$PROJECT_DIR$/Validation.py" />
+        <option value="$PROJECT_DIR$/Controle.m" />
+        <option value="$PROJECT_DIR$/helpers.py" />
+        <option value="$PROJECT_DIR$/pso.py" />
+        <option value="C:/Python34/Lib/site-packages/deap/tools/init.py" />
+        <option value="$PROJECT_DIR$/ga.py" />
+        <option value="$PROJECT_DIR$/Simulation.py" />
       </list>
     </option>
   </component>
@@ -146,10 +160,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="331" />
-    <option name="y" value="134" />
-    <option name="width" value="1296" />
-    <option name="height" value="696" />
+    <option name="x" value="833" />
+    <option name="width" value="854" />
+    <option name="height" value="1017" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -182,6 +195,11 @@
               <item name="code" type="b2602c69:ProjectViewProjectNode" />
               <item name="code" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="code" type="b2602c69:ProjectViewProjectNode" />
+              <item name="code" type="462c0819:PsiDirectoryNode" />
+              <item name="Simulation" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -200,15 +218,16 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Iury\Documents\code" />
       <recent name="C:\Users\Iury\Documents\code\MATLAB" />
       <recent name="C:\Users\Iury\Documents\code\Simulation" />
       <recent name="C:\Users\Iury\Documents\code\Simulation\Results" />
       <recent name="C:\Users\Iury\Documents\code\Validation\Results" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Iury\Documents\code" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -223,7 +242,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Validation">
+  <component name="RunManager" selected="Python.Simulation">
     <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
       <module name="tioCielo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -454,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524746560196</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="A lot of changes">
+      <created>1524750961153</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1524750961153</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -468,25 +494,24 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32921347" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5207824" side_tool="true" weight="0.35135135" />
-      <window_info anchor="right" x="0" y="0" width="374" height="826" id="Documentation" order="7" side_tool="true" visible="true" weight="0.0702934" />
+      <window_info anchor="right" x="0" y="0" width="374" height="826" id="Documentation" order="7" side_tool="true" visible="true" weight="0.06968215" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47921762" weight="0.3614865" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.1768018" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.1768018" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32545045" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47921762" weight="0.27702704" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.3265766" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27933985" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2567237" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="6" weight="0.3294335" />
       <window_info anchor="right" id="SciView" order="4" weight="0.8331296" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3988764" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3988764" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.32921347" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Coverage" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -494,34 +519,34 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3280899" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.32921347" />
+      <window_info anchor="right" id="Coverage" order="3" side_tool="true" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" id="Data View" order="5" weight="0.32939914" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32921347" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.47982886" visible="true" weight="0.4831081" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3265766" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3280899" />
       <window_info anchor="right" x="0" y="0" width="374" height="826" id="Documentation" order="7" side_tool="true" weight="0.24327628" />
       <window_info anchor="right" id="Database" order="6" weight="0.3294335" />
       <window_info anchor="right" id="Coverage" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3988764" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.52017117" side_tool="true" weight="0.3783784" />
       <window_info anchor="right" id="SciView" order="4" weight="0.8331296" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3277027" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32921347" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3265766" />
+      <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -543,60 +568,10 @@
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="9" />
+      <option name="time" value="10" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tcc.py" />
-    <entry file="file://C:/Python34/Lib/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="3095" column="19" lean-forward="true" selection-start-line="3095" selection-start-column="19" selection-end-line="3095" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/deap/tools/emo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8824">
-          <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/platypus/Platypus-master/platypus/experimenter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="236" column="4" selection-start-line="236" selection-start-column="4" selection-end-line="236" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/platypus/Platypus-master/platypus/indicators.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-17">
-          <caret line="108" column="8" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Simulation/TheProblem.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/matplotlib/axes/_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-233">
-          <caret line="2641" column="8" selection-start-line="2641" selection-start-column="8" selection-end-line="2641" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/deap/benchmarks/tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4556">
-          <caret line="270" column="4" selection-start-line="270" selection-start-column="4" selection-end-line="270" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python34/Lib/site-packages/matplotlib/figure.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-340">
@@ -639,13 +614,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Simulation/Results/04-12-2018-22-49-48 - MOPSO/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/04-12-2018-22-49-48 - MOPSO/parameters.txt" />
     <entry file="file://$PROJECT_DIR$/platypus/Platypus-master/platypus/algorithms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="372">
@@ -653,13 +622,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Simulation/Results/04-13-2018-00-37-39 - MOPSO/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/04-13-2018-00-37-39 - MOPSO/parameters.txt" />
     <entry file="file://$USER_HOME$/Downloads/rosenbrock.py" />
     <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/-1442825926/numpy/core/multiarray.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -755,13 +718,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python34/Lib/site-packages/deap/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-391">
-          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python34/Lib/site-packages/deap/algorithms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-375">
@@ -772,75 +728,113 @@
     <entry file="file://$USER_HOME$/Downloads/schwefel.py" />
     <entry file="file://$USER_HOME$/Downloads/bohachevsky.py" />
     <entry file="file://$USER_HOME$/Downloads/schaffer.py" />
+    <entry file="file://$PROJECT_DIR$/tcc.py" />
+    <entry file="file://$PROJECT_DIR$/Benchmark.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1088">
+          <caret line="64" column="8" selection-start-line="64" selection-start-column="8" selection-end-line="64" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/TheProblem.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="264" column="29" selection-start-line="264" selection-start-column="28" selection-end-line="264" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Controle.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="187" column="40" lean-forward="true" selection-start-line="187" selection-start-column="40" selection-end-line="187" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-14-46-06 - Experiment/04-26-2018-14-46-06.132008 - PSO/parameters.txt" />
     <entry file="file://$PROJECT_DIR$/helpers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
+        <state relative-caret-position="1924">
+          <caret line="121" column="44" selection-start-line="121" selection-start-column="44" selection-end-line="121" selection-end-column="44" />
           <folding>
             <element signature="e#47#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tcc.py" />
-    <entry file="file://$PROJECT_DIR$/Benchmark.py">
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-19-03-28 - Experiment/04-26-2018-19-03-28.490710 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://C:/Python34/Lib/site-packages/deap/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1309">
+          <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Simulation.py">
+    <entry file="file://C:/Python34/Lib/site-packages/deap/tools/init.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="192" column="22" selection-start-line="192" selection-start-column="22" selection-end-line="192" selection-end-column="22" />
+        <state relative-caret-position="357">
+          <caret line="21" column="7" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation/Results/04-26-2018-10-05-56.077199 - Experiment Bohachevsky/04-26-2018-10-07-25.401028 - GA/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation/Results/04-26-2018-10-02-02.623903 - Experiment Bohachevsky/04-26-2018-10-02-02.624901 - GA/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation/Results/04-26-2018-10-05-56.077199 - Experiment Bohachevsky/04-26-2018-10-05-56.078199 - GA/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation/Results/04-26-2018-10-02-02.623903 - Experiment Bohachevsky/04-26-2018-10-02-03.522311 - PSO/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation/Results/04-26-2018-10-05-56.077199 - Experiment Bohachevsky/04-26-2018-10-05-58.640522 - PSO/parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/ga.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="31" column="32" lean-forward="true" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
+        <state relative-caret-position="-153">
+          <caret line="207" column="61" lean-forward="true" selection-start-line="207" selection-start-column="61" selection-end-line="207" selection-end-column="61" />
           <folding>
             <element signature="e#47#75#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-11-09.801684 - PSO/parameters.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
+          <folding>
+            <element signature="e#47#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-27-45.420712 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-21-00-08.874920 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-51-52.174024 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-43-50.693301 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-35-54.422198 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-19-27.403130 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulation/Results/26-04-2018-20-11-09 - Experiment/04-26-2018-20-11-09.801684 - PSO/fitness.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/pso.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="34" selection-start-line="34" selection-end-line="34" />
+        <state relative-caret-position="17">
+          <caret line="108" selection-start-line="108" selection-end-line="108" />
           <folding>
             <element signature="e#47#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="284" column="56" selection-start-line="284" selection-start-column="56" selection-end-line="284" selection-end-column="56" />
-          <folding>
-            <element signature="e#47#68#0" expanded="true" />
           </folding>
         </state>
       </provider>

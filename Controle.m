@@ -190,25 +190,25 @@ classdef Controle < handle
 
             bodeRes = max(max(mag1),max(mag2));
 
-            if raio < 1
-            
-                MF1full2 = ss(obj.A_til_1 + obj.B_til*K, [obj.Br_til obj.Bdist1_til], obj.C_til, 0, obj.Ts);
-                MF2full2 = ss(obj.A_til_2 + obj.B_til*K, [obj.Br_til obj.Bdist2_til], obj.C_til, 0, obj.Ts);
+            %if raio < 1
+            %
+            %    MF1full2 = ss(obj.A_til_1 + obj.B_til*K, [obj.Br_til obj.Bdist1_til], obj.C_til, 0, obj.Ts);
+            %    MF2full2 = ss(obj.A_til_2 + obj.B_til*K, [obj.Br_til obj.Bdist2_til], obj.C_til, 0, obj.Ts);
 
-                [yh21full2,t,xh21s1] = lsim(MF1full2,obj.u,obj.t,'b');
-                [yh22full2,t,xh22s1] = lsim(MF2full2,obj.u,obj.t,'c');
+            %    [yh21full2,t,xh21s1] = lsim(MF1full2,obj.u,obj.t,'b');
+            %    [yh22full2,t,xh22s1] = lsim(MF2full2,obj.u,obj.t,'c');
 
-                e1 = obj.ref(1000:6013)'-yh21full2(1000:6013);
-                e2 = obj.ref(1000:6013)'-yh22full2(1000:6013);
+            %    e1 = obj.ref(1000:6013)'-yh21full2(1000:6013);
+            %    e2 = obj.ref(1000:6013)'-yh22full2(1000:6013);
 
-                ise1 = e1'*e1;
-                ise2 = e2'*e2;
+            %    ise1 = e1'*e1;
+            %    ise2 = e2'*e2;
                 
-                ise = max(ise1,ise2);
+            %    ise = max(ise1,ise2);
                
-            else
+            %else
                 ise = 1e10;
-            end
+            %end
 
             %k=1;
             %k2=1;

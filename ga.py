@@ -7,8 +7,7 @@ from datetime import datetime
 from deap import creator, base, tools, algorithms
 from pyDOE import *
 import copy
-import pickle
-import numpy as np
+from helpers import *
 
 
 class Ga:
@@ -34,24 +33,10 @@ class Ga:
             self.pool = mp.Pool()
             self.toolbox.register("map", self.pool.map)
 
-    def _initIndividual(self, icls, content):
+    def _generate(self, size):
 
-        return icls(list(map(lambda x: round(x, 4), content)))
-
-    def _initPopulation(self, pcls, ind_init):
-
-        design = []
-
-        for j in range(0, self.populationSize):
-
-            gene = []
-
-            for i in range(0, len(self.limInf)):
-                gene.append(round(np.random.uniform(self.limInf[i], self.limSup[i]), 5))
-
-            design.append(gene)
-
-        return pcls(ind_init(c) for c in design)
+        # Create the individual
+        return creator.Individual([np.random.uniform(self.limInf[x], self.limSup[x]) for x in range(size)])
 
     # def _initPopulationLHS(self, pcls, ind_init):
     #
@@ -66,50 +51,18 @@ class Ga:
     #
     #     return pcls(ind_init(list(c)) for c in design)
 
-    # def _initPopulationPseudoRandom(self, pcls, ind_init):
-    #
-    #     population = []
-    #
-    #     for i in range(0, round(self.populationSize)):
-    #
-    #         k1 = round(np.random.uniform(-20, 0), 5)
-    #         k2 = round(np.random.uniform(-1, 0.5)*abs(k1), 5)
-    #         k3 = round(np.random.uniform(-1, 0.5)*abs(k1), 5)
-    #         k4 = round(np.random.uniform(-1, 0.5)*abs(k1), 5)
-    #
-    #         k5 = round(np.random.uniform(0, 100), 5)
-    #         k6 = round(np.random.uniform(-1, -0.5)*k5, 5)
-    #
-    #         k7 = round(np.random.uniform(abs(max(k5, k6))/3, abs(max(k5, k6))), 5)
-    #         k8 = round(np.random.uniform(-1, -0.5)*k7, 5)
-    #
-    #         k9 = round(np.random.uniform(abs(max(k8, k7))/3, abs(max(k8, k7))), 5)
-    #         k10 = round(np.random.uniform(-1, -0.5)*k9, 5)
-    #
-    #         k11 = round(np.random.uniform(abs(max(k10, k9))/3, abs(max(k10, k9))), 5)
-    #         k12 = round(np.random.uniform(-1, -0.5)*k11, 5)
-    #
-    #         population.append([k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12])
-    #
-    #     population.append(self.x0)
-    #
-    #     return pcls(ind_init(c) for c in population)
 
     def run(self, method='modified', nGenerations=10, crossOver=0.5, mutation=0.1, initPop=None, saveGeneration=20, verbose=True):
 
         # Start time
         start_time = datetime.now()
 
-        self.toolbox.register("individual_guess", self._initIndividual, creator.Individual)
-        self.toolbox.register("population_guess", self._initPopulation, list, self.toolbox.individual_guess)
+        self.toolbox.register("individual", self._generate, size=len(self.limSup))
+        self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
+        self.toolbox.register("evaluate", self.fitnessFunction)
 
         # Initialize the population
-        if initPop is None:
-            pop = self.toolbox.population_guess()
-        else:
-            pop = [self.toolbox.individual_guess(c) for c in initPop]
-
-        self.toolbox.register("evaluate", self.fitnessFunction)
+        pop = self.toolbox.population(n=self.populationSize)
 
         if len(self.weights) > 2:
             self.toolbox.register("mate", tools.cxSimulatedBinaryBounded, eta=5, low=self.limInf, up=self.limSup)
@@ -186,6 +139,9 @@ class Ga:
         pickle.dump(info, output)
         output.close()
 
+        # Plot the historic
+        plotHistoric(range(0, len(statsPopulation)), statsPopulation, savePath=self.path)
+
         return hof
 
 
@@ -205,7 +161,10 @@ class Ga:
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in population if not ind.fitness.valid]
-        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+
+        popFit = map(lambda x: list(x), invalid_ind)
+
+        fitnesses = toolbox.map(toolbox.evaluate, popFit)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
@@ -221,15 +180,17 @@ class Ga:
             print(logbook.stream)
 
         # Begin the generational process
-        while (method == 'modified' and gen < 5000) or (gen < nGeneration and method != 'modified'):
+        while (method == 'modified' and gen < 5000) or (gen < nGeneration + 2 and method != 'modified'):
 
             # Vary the population
             offspring = algorithms.varOr(population, toolbox, lambda_, cxpb, mutpb)
 
             # Evaluate the individuals with an invalid fitness
             invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-            fitnesses = list(map(toolbox.evaluate, invalid_ind))
-            # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+
+            popFit = map(lambda x: list(x), invalid_ind)
+
+            fitnesses = list(map(toolbox.evaluate, popFit))
             for ind, fit in zip(invalid_ind, fitnesses):
                 ind.fitness.values = fit
 

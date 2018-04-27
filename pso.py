@@ -8,12 +8,12 @@ from pyDOE import *
 import random
 import pickle
 from datetime import datetime
-import copy
+from helpers import *
 
 
 class PSO:
 
-    def __init__(self, fitnessFunction, limInf, limSup, path, weights, phi1=0.4, phi2=0.6, smin=-0.3, smax=0.3,
+    def __init__(self, fitnessFunction, limInf, limSup, path, weights, phi1=0.4, phi2=0.6, smin=-0.5, smax=0.5,
                  populationSize=100, multiprocessing=False):
 
         self.fitnessFunction = fitnessFunction
@@ -40,7 +40,7 @@ class PSO:
     def _generate(self, size, pmin, pmax, smin, smax):
 
         # Create the particle
-        part = creator.Particle(random.uniform(0, 500) for x in range(size))
+        part = creator.Particle([random.uniform(pmin[x], pmax[x]) for x in range(size)])
 
         # Generate the particle speed
         part.speed = [random.uniform(smin, smax) for _ in range(size)]
@@ -69,8 +69,11 @@ class PSO:
         part[:] = list(map(operator.add, part, part.speed))
 
         # Random particle's position if it exceeds the limit
-        if part[0] > self.limSup[0] or part[0] < self.limInf[0] or part[1] > self.limSup[1] or part[1] < self.limInf[1]:
-            part[:] = [random.uniform(self.limInf[x], self.limSup[x]) for x in range(len(self.limSup))]
+        a = 0
+        for p in part:
+            if p > self.limSup[a] or p < self.limInf[a]:
+                part[a] = random.uniform(self.limInf[a], self.limSup[a])
+            a = a + 1
 
     def run(self, nGenerations=1000, saveEpoch=5, method='modified', verbose=True):
 
@@ -102,7 +105,7 @@ class PSO:
         g = 0
         minRaio = 0
 
-        while (method == 'modified' and g < 5000) or (g < nGenerations and method != 'modified'):
+        while (method == 'modified' and g < 5000) or (g < nGenerations + 2 and method != 'modified'):
 
             popFit = map(lambda x: list(x), pop)
 
@@ -195,5 +198,8 @@ class PSO:
         output = open(self.path + "/info.pkl", 'wb')
         pickle.dump(info, output)
         output.close()
+
+        # Plot the historic
+        plotHistoric(range(0, len(results)), results, savePath=self.path)
 
         return best
