@@ -72,7 +72,7 @@ class Ga:
             hof = tools.ParetoFront()
         else:
             self.toolbox.register("mate", tools.cxOnePoint)
-            self.toolbox.register("mutate", tools.mutUniformInt, low=self.limInf, up=self.limSup, indpb=0.01)
+            self.toolbox.register("mutate", tools.mutPolynomialBounded, eta=5, low=self.limInf, up=self.limSup, indpb=0.05)
             self.toolbox.register("select", tools.selTournament, tournsize=2)
             hof = tools.HallOfFame(3)
 
@@ -190,7 +190,7 @@ class Ga:
 
             popFit = map(lambda x: list(x), invalid_ind)
 
-            fitnesses = list(map(toolbox.evaluate, popFit))
+            fitnesses = toolbox.map(toolbox.evaluate, popFit)
             for ind, fit in zip(invalid_ind, fitnesses):
                 ind.fitness.values = fit
 
