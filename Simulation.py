@@ -24,8 +24,15 @@ Br_til = mat['Br_til']
 C_til = mat['C_til']
 Ts = mat['Ts']
 
-limSup = [0, 0, 0, 0, 100, 0, 50, 0, 50, 0, 50, 0]
-limInf = [-15, -15, -15, -15, 0, -100, 0, -50, 0, -50, 0, -50]
+#limSup = [0, 0, 0, 0, 100, 0, 50, 0, 50, 0, 50, 0]
+#limInf = [-15, -15, -15, -15, 0, -100, 0, -50, 0, -50, 0, -50]
+limSup = [0, 0, 0, 0.5, 100, 0, 50, 0, 50, 0, 50, 0]
+limInf = [-15, 1e-10, -15, -0.5, 0, -100, 0, -50, 0, -50, 0, -50]
+#limSup = [-15, 0.0, -2, -1.292859528039262, 78, -76.00080872558523, 34.336290645512605, -33.407788915312466, 25.6114464208353,
+# #  -26, 9.352959226656882, -8.283920091847143]
+# limSup = [-14, 0, -1, -1, 85, -60, 38, -28, 30, -20, 15, -4]
+# limInf = [-16.6, 0, -2.1, -1.5, 70, -85, 30, -38, 20, -31, 5, -20]
+
 
 eng = matlab.engine.start_matlab()
 
@@ -49,15 +56,7 @@ def evaluate(individual):
     x = res[0][0]
     y = res[0][1]
 
-    # if res[0][0] > 0.997:
-    #     return 10 ** res[0][0],
-    # else:
-    #     return res[0][1]*res[0][0],
-
-    # return y*x + (1 / (1 + exp(-1000*x + 1000)))*(20*(x+10)**2 - 20*120),
-    # return y*x + (1 / (1 + exp(-5000*x + 5000)))*(450*x - 440),
-    # return y*x*(-(1 / (1 + exp(-5000*x + 5000))) +1) + (1 / (1 + exp(-5000*x + 5000)))*10*x,
-    return y*x + (1 / (1 + exp(-1000*x + 1000)))*(380*x - 360),
+    return y * x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360),
 
 
 def evaluateAll(individual):
@@ -65,7 +64,7 @@ def evaluateAll(individual):
 
     res = eng.testa(c, a, nargout=1)
 
-    return res[0][0], res[0][1] #, res[0][2]
+    return res[0][0], res[0][1]  # , res[0][2]
 
 
 def executeGA(info, population_size, ngen, crossover_rate, mutation_rate, path, method='other', multiprocessing=False):
@@ -273,8 +272,97 @@ def compare(self, path1, path2):
 
     print(hyp_result)
 
+def fitness(x, y):
+
+    return y*x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360)
+
 
 if __name__ == '__main__':
+
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # x = np.arange(0.9, 1.5, 0.005)
+    # y = np.arange(0, 5, 0.005)
+    # X, Y = np.meshgrid(x, y)
+    # zs = np.array([fitness(x, y) for x, y in zip(np.ravel(X), np.ravel(Y))])
+    # Z = zs.reshape(X.shape)
+    #
+    # CS = ax.plot_surface(X, Y, Z,  cmap=cm.coolwarm)
+    #
+    # ax.set_xlabel("Raio")
+    # ax.set_ylabel("Bode")
+    # ax.set_zlabel("Custo")
+    # #plt.title(title)
+    #
+    # clb = plt.colorbar(CS, orientation='horizontal', shrink=0.5)
+    # clb.ax.set_title('Custo')
+    #
+    # plt.show()
+    #
+    #
+    # exit()
+
+    # path = 'Simulation/Results/29-05-2018-18-34-40 - Experiment'
+    #
+    # fitnessArray = []
+    #
+    # for i in os.listdir(path):
+    #     infoFile = open(path + "/" + i + "/info.pkl", 'rb')
+    #     statsPopulationFile = open(path + "/" + i + "/statsPopulation.pkl", 'rb')
+    #     historicFile = open(path + "/" + i + "/historic.pkl", 'rb')
+    #     # distanceFile = open(path + "/" + i + "/distance.pkl", 'rb')
+    #
+    #     info = pickle.load(infoFile)
+    #     results = pickle.load(statsPopulationFile)
+    #     fitnessArray.append(results)
+    #     historic = pickle.load(historicFile)
+    #     # distance = pickle.load(distanceFile)
+    #     #
+    #     # distanceModified = []
+    #     #
+    #     # print(len(distance))
+    #     #
+    #     # c = 0
+    #     # for d in distance:
+    #     #
+    #     #     if c == 10:
+    #     #         distanceModified.append(d)
+    #     #         c = 0
+    #     #
+    #     #     c = c + 1
+    #
+    #
+    #     # # Create the boxplot
+    #     # plt.boxplot(distanceModified)
+    #     # plt.title('Distância do enxame ao Gbest')
+    #     # plt.grid()
+    #     # plt.xlabel('Época')
+    #     # plt.ylabel('Distância')
+    #     # plt.xticks(np.arange(1, 21), [1] + list(range(10, 200, 10)))
+    #     # plt.show()
+    #     #
+    #     #
+    #     # Plot the historic
+    #     # plotHistoric(range(0, len(results)), results, savePath=path + "/" + i)
+    #     # plotHistoric(range(0, len(results)), results)
+    #     #
+    #     # plt.plot(range(0, len(results)+1), historic[0], label="Min")
+    #     # plt.plot(range(0, len(results) + 1), historic[1], label="Mean")
+    #     # plt.plot(range(0, len(results) + 1), historic[2], label="Max")
+    #     # # plt.plot(range(0, len(results)), results)
+    #     # plt.grid()
+    #     # plt.xlabel("Geração")
+    #     # plt.ylabel("Fitness")
+    #     # plt.legend()
+    #     # plt.show()
+    #
+    #
+    #     print(info['bestInd'])
+    #     print(evaluateAll(info['bestInd']))
+    #     print(evaluate(info['bestInd']))
+    #
+    #
+    # exit()
 
     info = {'fitness': evaluate, 'limInf': limInf, 'limSup': limSup}
 
@@ -283,17 +371,17 @@ if __name__ == '__main__':
     # Create the simulation directory
     os.mkdir(path)
 
-    for i in range(0, 10):
-
-         best = executePSO(info, population_size=50, ngen=200, phi1=0.5, phi2=0.5, path=path, method='other', multiprocessing=True)
-
-         print(str(best))
-         print(evaluateAll(best))
-
-    # for i in range(0, 1):
-    #     hof = executeGA(info, population_size=50, ngen=10, crossover_rate=0.8, mutation_rate=0.2, path=path,
-    #                     method='other', multiprocessing=True)
+    # for i in range(0, 10):
+    #     best = executePSO(info, population_size=50, ngen=200, phi1=0.5, phi2=0.5, path=path, method='other',
+    #                       multiprocessing=True)
     #
-    #     print(str(hof))
-    #     # print(str(best).replace(',', ' '))
-    #     print(evaluateAll(hof))
+    #     print(str(best))
+    #     print(evaluateAll(best))
+
+    for i in range(0, 1):
+        hof = executeGA(info, population_size=100, ngen=200, crossover_rate=0.8, mutation_rate=0.2, path=path,
+                        method='other', multiprocessing=True)
+
+        print(str(hof))
+        print(evaluateAll(hof))
+

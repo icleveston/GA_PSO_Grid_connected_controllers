@@ -71,7 +71,7 @@ class Ga:
             self.toolbox.register("select", tools.selNSGA2)
             hof = tools.ParetoFront()
         else:
-            self.toolbox.register("mate", tools.cxOnePoint)
+            self.toolbox.register("mate", tools.cxSimulatedBinaryBounded, eta=5, low=self.limInf, up=self.limSup)
             self.toolbox.register("mutate", tools.mutPolynomialBounded, eta=5, low=self.limInf, up=self.limSup, indpb=0.05)
             self.toolbox.register("select", tools.selTournament, tournsize=2)
             hof = tools.HallOfFame(3)

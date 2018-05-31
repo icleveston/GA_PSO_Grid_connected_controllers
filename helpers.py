@@ -123,6 +123,7 @@ def plotHistoric(geracao, raio=[], bode=[], ise=[], together=False, title='', sa
                         orientation='portrait', papertype=None, format=None,
                         transparent=False, bbox_inches=None, pad_inches=0.1,
                         frameon=None)
+            plt.gcf().clear()
         else:
             plt.show()
 

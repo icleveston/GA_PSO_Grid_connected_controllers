@@ -173,6 +173,7 @@ def compareMO():
     plt.show()
 
 def summary(path, plot=False):
+
     results = []
     sucessoGa = []
     sucessoPSO = []
@@ -189,22 +190,22 @@ def summary(path, plot=False):
 
         dataPrint = [
             method,
-            str(round(info['bestVal'][0], 3)),
-            str(list(map(lambda x: round(x, 3), info['bestInd']))),
+            str(round(info['bestVal'][0], 5)),
+            str(list(map(lambda x: round(x, 5), info['bestInd']))),
             str(info['elapsedTime']),
             info['evalTotal'],
             info['nGeneration'],
-            'Sim' if round(info['bestVal'][0], 3) < 0.01 else 'Não'
+            'Sim' if round(info['bestVal'][0], 5) < 0.01 else 'Não'
         ]
 
         if method == 'GA':
-            if round(info['bestVal'][0], 3) < 0.01:
+            if round(info['bestVal'][0], 5) < 0.01:
                 sucessoGa.append(1)
             else:
                 sucessoGa.append(0)
 
         if method == 'PSO':
-            if round(info['bestVal'][0], 3) < 0.01:
+            if round(info['bestVal'][0], 5) < 0.01:
                 sucessoPSO.append(1)
             else:
                 sucessoPSO.append(0)
@@ -266,7 +267,7 @@ if __name__ == '__main__':
     b = Benchmark(nvar=2).getSchafferInfo()
     c = Benchmark(nvar=2).getSchwefelInfo()
 
-    infos = [a, b, c]
+    infos = [c]
 
     for info in infos:
 
@@ -280,14 +281,14 @@ if __name__ == '__main__':
 
         for i in range(10):
             # Execute the ga
-            # executeGA(info, population_size=1000, ngen=1000, crossover_rate=0.8, mutation_rate=0.2, path=path)
-            executeGA(info, population_size=1000, ngen=300, crossover_rate=0.8, mutation_rate=0.2, path=path,
-                      method='modified', multiprocessing=False)
+            executeGA(info, population_size=300, ngen=100-2, crossover_rate=0.8, mutation_rate=0.2, path=path, multiprocessing=True)
+            # executeGA(info, population_size=1000, ngen=300, crossover_rate=0.8, mutation_rate=0.2, path=path,
+            #           method='modified', multiprocessing=False)
 
             # Execute the pso
-            # executePSO(info, population_size=1000, ngen=1000, phi1=0.5, phi2=0.5, path=path)
-            executePSO(info, population_size=1000, ngen=300, phi1=0.5, phi2=0.5, path=path,
-                       method='modified', multiprocessing=False)
+            #executePSO(info, population_size=100, ngen=300-2, phi1=0.5, phi2=0.5, path=path, multiprocessing=True)
+            # # executePSO(info, population_size=1000, ngen=300, phi1=0.5, phi2=0.5, path=path,
+            # #            method='modified', multiprocessing=False)
 
         # Show the summary for the experiment
         summary(path, plot=False)
