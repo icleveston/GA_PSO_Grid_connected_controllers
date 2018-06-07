@@ -27,7 +27,7 @@ Ts = mat['Ts']
 #limSup = [0, 0, 0, 0, 100, 0, 50, 0, 50, 0, 50, 0]
 #limInf = [-15, -15, -15, -15, 0, -100, 0, -50, 0, -50, 0, -50]
 limSup = [0, 0, 0, 0.5, 100, 0, 50, 0, 50, 0, 50, 0]
-limInf = [-15, 1e-10, -15, -0.5, 0, -100, 0, -50, 0, -50, 0, -50]
+limInf = [-15, 1e-15, -15, -0.5, 0, -100, 0, -50, 0, -50, 0, -50]
 #limSup = [-15, 0.0, -2, -1.292859528039262, 78, -76.00080872558523, 34.336290645512605, -33.407788915312466, 25.6114464208353,
 # #  -26, 9.352959226656882, -8.283920091847143]
 # limSup = [-14, 0, -1, -1, 85, -60, 38, -28, 30, -20, 15, -4]
@@ -56,7 +56,7 @@ def evaluate(individual):
     x = res[0][0]
     y = res[0][1]
 
-    return y * x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360),
+    return y*x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360),
 
 
 def evaluateAll(individual):
@@ -272,9 +272,9 @@ def compare(self, path1, path2):
 
     print(hyp_result)
 
-def fitness(x, y):
-
-    return y*x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360)
+# def fitness(x, y):
+#
+#     return y*x + (1 / (1 + exp(-1000 * x + 1000))) * (380 * x - 360)
 
 
 if __name__ == '__main__':
@@ -301,8 +301,8 @@ if __name__ == '__main__':
     #
     #
     # exit()
-
-    # path = 'Simulation/Results/29-05-2018-18-34-40 - Experiment'
+    #
+    # path = 'Simulation/Results/05-06-2018-11-28-15 - Experiment'
     #
     # fitnessArray = []
     #
@@ -371,16 +371,16 @@ if __name__ == '__main__':
     # Create the simulation directory
     os.mkdir(path)
 
-    # for i in range(0, 10):
-    #     best = executePSO(info, population_size=50, ngen=200, phi1=0.5, phi2=0.5, path=path, method='other',
-    #                       multiprocessing=True)
+    # for i in range(0, 1):
+    # #     best = executePSO(info, population_size=300, ngen=300, phi1=0.5, phi2=0.5, path=path, method='other',
+    # #                       multiprocessing=True)
+    # #
+    # #     print(str(best))
+    # #     print(evaluateAll(best))
     #
-    #     print(str(best))
-    #     print(evaluateAll(best))
-
     for i in range(0, 1):
-        hof = executeGA(info, population_size=100, ngen=200, crossover_rate=0.8, mutation_rate=0.2, path=path,
-                        method='other', multiprocessing=True)
+        hof = executeGA(info, population_size=80, ngen=150, crossover_rate=0.8, mutation_rate=0.2, path=path,
+                     method='other', multiprocessing=True)
 
         print(str(hof))
         print(evaluateAll(hof))

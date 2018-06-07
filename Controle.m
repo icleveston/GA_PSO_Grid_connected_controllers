@@ -23,7 +23,7 @@ classdef Controle < handle
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Parâmetros Rede
 
-            Lg_2_min = 0e-3;   % Indutância mínima da rede
+            Lg_2_min = 0.5e-3;   % Indutância mínima da rede
             Lg_2_max = 1e-3;   % Indutância máxima da rede
 
             % Discretização
